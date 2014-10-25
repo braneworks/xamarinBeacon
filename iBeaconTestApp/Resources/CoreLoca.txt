@@ -1,0 +1,76 @@
+﻿using System;
+using MonoTouch.CoreLocation;
+using MonoTouch.Foundation;
+
+namespace iBeaconTestApp.Models
+{
+	public class CoreLocation : CLLocationManagerDelegate
+	{
+		private BeaconContent _content = new BeaconContent();
+
+		public CoreLocation(){}
+
+		public override void RegionEntered (CLLocationManager manager, CLRegion region)
+		{
+			manager.StartRangingBeacons (region as CLBeaconRegion);
+
+			Console.WriteLine ("Region Entered....");
+
+			_content.Clear ();
+			_content.NotificationTitle = "Welcome!";
+			_content.NotificationMessage = "You Have Entered My Region";
+			_content.RegionEventName = "Region Entered";
+			_content.Region = region.Identifier;
+
+			NSNotificationCenter.DefaultCenter.PostNotificationName ("RegionUpdate", this, new NSDictionary ("RegionData", _content));
+		}
+
+		public override void RegionLeft (CLLocationManager manager, CLRegion region)
+		{
+			manager.StopRangingBeacons(region as CLBeaconRegion);
+
+			Console.WriteLine ("Region Left....");
+
+			_content.Clear ();
+			_content.NotificationTitle = "Come Back Soon!";
+			_content.NotificationMessage = "You Have Exited My Region";
+			_content.RegionEventName = "Region Left";
+			_content.Region = region.Identifier;
+
+			NSNotificationCenter.DefaultCenter.PostNotificationName ("RegionUpdate", this, new NSDictionary ("RegionData", _content));
+		}
+
+		public override void DidRangeBeacons (CLLocationManager manager, CLBeacon[] beacons, CLBeaconRegion region)
+		{
+			if (beacons.Length > 0) 
+			{
+				CLBeacon selectedBeacon = (CLBeacon)beacons.GetValue (0);
+
+				Console.WriteLine ("Ranging....");
+
+				_content.Clear ();
+				_content.NotificationTitle = "Found a Beacon!";
+				_content.NotificationMessage = "I am Ranging Beacons";
+				_content.RegionEventName = "Ranging";
+				_content.Rssi = selectedBeacon.Rssi;
+				_content.Accuracy = selectedBeacon.Accuracy;
+				_content.Proximity = selectedBeacon.Proximity;
+				_content.Region = region.Identifier;
+				_content.Major = selectedBeacon.Major.ToString();
+				_content.Minor = selectedBeacon.Minor.ToString();
+				_content.ProximityUuid = selectedBeacon.ProximityUuid.AsString ();
+
+				NSNotificationCenter.DefaultCenter.PostNotificationName ("BeaconUpdate", this, new NSDictionary ("RangingData", _content));
+			}
+		}
+
+		public override void DidDetermineState (CLLocationManager manager, CLRegionState state, CLRegion region)
+		{
+			if (state == CLRegionState.Inside) {
+				manager.StartRangingBeacons (region as CLBeaconRegion);
+			}
+		}
+	}
+}
+
+

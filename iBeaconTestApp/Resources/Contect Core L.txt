@@ -1,0 +1,63 @@
+﻿using System;
+using MonoTouch.CoreLocation;
+using MonoTouch.Foundation;
+using MonoTouch.UIKit;
+
+namespace iBeaconTestApp.Models
+{
+	public class CoreLocation : CLLocationManagerDelegate
+	{
+		BeaconContentManager _contentManager = BeaconContentManager.GetInstance();
+
+		public CoreLocation(){}
+
+		private void SetContent(BeaconContent content)
+		{
+			if (content != null) {
+				if (UIApplication.SharedApplication.ApplicationState == UIApplicationState.Active) {
+					NSNotificationCenter.DefaultCenter.PostNotificationName ("ContentUpdate", this, new NSDictionary ("Content", content));
+
+				} else {
+					NotificationHelper.SendLocalAlertNotification (content);
+				}
+			}
+		}
+
+		public override void RegionEntered (CLLocationManager manager, CLRegion region)
+		{
+			SetContent (_contentManager.GetRegionContent (region, CLRegionState.Inside));
+			manager.StartRangingBeacons (region as CLBeaconRegion);
+
+		}
+
+		public override void RegionLeft (CLLocationManager manager, CLRegion region)
+		{
+			SetContent (_contentManager.GetRegionContent (region, CLRegionState.Outside));
+			manager.StopRangingBeacons (region as CLBeaconRegion);
+
+		}
+
+		public override void DidRangeBeacons (CLLocationManager manager, CLBeacon[] beacons, CLBeaconRegion region)
+		{
+			if(beacons.Length > 0)
+			{
+				CLBeacon selectedBeacon = (CLBeacon)beacons.GetValue (0);
+
+				if (selectedBeacon.Proximity != CLProximity.Unknown){
+					SetContent (_contentManager.GetBeaconContent (selectedBeacon, region));
+				}
+			}
+		}
+
+		public override void DidDetermineState (CLLocationManager manager, CLRegionState state, CLRegion region)
+		{
+			if (state == CLRegionState.Inside)
+			{
+				manager.StartRangingBeacons (region as CLBeaconRegion);
+			}
+
+		}
+	}
+}
+
+

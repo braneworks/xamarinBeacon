@@ -1,0 +1,68 @@
+﻿using System;
+using MonoTouch.Foundation;
+using MonoTouch.UIKit;
+using iBeaconTestApp.Models;
+
+namespace iBeaconTestApp
+{
+	public partial class iBeaconTestAppViewController : UIViewController
+	{
+		NSObject _beaconNotification;
+		NSObject _regionNotification;
+
+		public iBeaconTestAppViewController (IntPtr handle) : base (handle)
+		{
+		}
+
+		#region View lifecycle
+	
+
+		public override void ViewWillAppear (bool animated)
+		{
+			base.ViewWillAppear (animated);
+
+			Console.WriteLine ("WillAppear");
+
+			_beaconNotification =  NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"BeaconUpdate", OnBeaconUpdate);
+			_regionNotification =  NSNotificationCenter.DefaultCenter.AddObserver ((NSString)"RegionUpdate", OnRegionUpdate);
+		}
+
+		public override void ViewWillDisappear (bool animated)
+		{
+			_beaconNotification.Dispose();
+			_regionNotification.Dispose();
+			base.ViewWillDisappear (animated);
+		}
+
+
+		public void OnBeaconUpdate(NSNotification notification)
+		{
+			var content = notification.UserInfo.ValueForKey ((NSString)"RangingData") as BeaconContent;
+			DisplayContent (content);
+		}
+
+	
+		public void OnRegionUpdate(NSNotification notification)
+		{
+			var content = notification.UserInfo.ValueForKey ((NSString)"RegionData") as BeaconContent;
+			DisplayContent (content);
+		}
+
+		void DisplayContent (BeaconContent content)
+		{
+			lblAccuracy.Text = content.Accuracy.ToString ();
+			lblMajor.Text = content.Major.ToString ();
+			lblMinor.Text = content.Minor.ToString ();
+			lblProximity.Text = content.Proximity.ToString ();
+			lblRegioName.Text = content.Region.ToString () + " : " + content.RegionEventName.ToString ();
+			lblrssi.Text = content.Rssi.ToString ();
+			lblUUID.Text = content.ProximityUuid.ToString ();
+			lblAdtext.Text = content.NotificationMessage.ToString ();
+			lblMessageTitle.Text = content.NotificationTitle.ToString ();
+		}
+
+		#endregion
+	}
+}
+
+

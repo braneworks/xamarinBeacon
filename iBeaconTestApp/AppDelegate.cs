@@ -27,6 +27,10 @@ namespace iBeaconTestApp
 				{
 					_locationManager = new CLLocationManager ();
 					_locationManager.Delegate = new CoreLocation ();
+					if (UIDevice.CurrentDevice.CheckSystemVersion (8, 0)) {
+						_locationManager.RequestAlwaysAuthorization ();
+					}
+
 				}
 				return _locationManager;
 			}
@@ -35,7 +39,7 @@ namespace iBeaconTestApp
 		public override bool FinishedLaunching (UIApplication application, NSDictionary launchOptions)
 		{
 			Console.WriteLine ("Launched");
-			ShareLocationManager.StartMonitoring (Region.RegionToMonitor);
+			ShareLocationManager.StartMonitoring(Region.RegionToMonitor);
 			return true;
 		}
 

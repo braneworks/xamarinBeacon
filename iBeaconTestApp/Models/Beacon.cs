@@ -10,7 +10,7 @@ namespace iBeaconTestApp.Models
 
 		static Region()
 		{
-			beaconRegion = new CLBeaconRegion (new NSUuid (Globals.BroadCastUUid), Globals.BeaconRegion);
+			beaconRegion = new CLBeaconRegion (new NSUuid (Globals.BroadCastUUid),Globals.BeaconRegion);
 			beaconRegion.NotifyEntryStateOnDisplay = true;
 			beaconRegion.NotifyOnEntry = true;
 			beaconRegion.NotifyOnExit = true;

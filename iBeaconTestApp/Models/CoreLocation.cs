@@ -20,7 +20,10 @@ namespace iBeaconTestApp.Models
 				}
 			}
 		}
-
+		public override void MonitoringFailed (CLLocationManager manager, CLRegion region, NSError error)
+		{
+			Console.WriteLine (error.ToString ());
+		}
 		public override void RegionEntered (CLLocationManager manager, CLRegion region)
 		{
 			Console.WriteLine ("Entered Region");

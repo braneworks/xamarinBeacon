@@ -5,7 +5,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>iBeaconTestApp1</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.your-company.iBeaconAwareTestApp2</string>
+	<string>com.braneworks.iBeaconAwareTestApp2</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
 	<key>CFBundleVersion</key>
@@ -48,5 +48,7 @@
 			<false/>
 		</dict>
 	</dict>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>We would like to use your location....</string>
 </dict>
 </plist>

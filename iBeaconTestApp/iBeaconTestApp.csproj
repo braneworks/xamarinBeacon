@@ -45,7 +45,7 @@
     <ConsolePause>false</ConsolePause>
     <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
     <MtouchDebug>true</MtouchDebug>
-    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignKey>iPhone Developer: Bob Lautenbach (5W7P562VFD)</CodesignKey>
     <MtouchSdkVersion>7.1</MtouchSdkVersion>
     <MtouchI18n>
     </MtouchI18n>
